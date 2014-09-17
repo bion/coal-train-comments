@@ -1,0 +1,3 @@
+* TODO
+  - [ ] Fix dependencies on individual PDFs file, so that wget is not
+    called unnecessarily.
