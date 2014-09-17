@@ -1,6 +1,6 @@
 all: pages
 
-clean: clean-pdf clean-pages
+clean: clean-pdf clean-pages clean-db
 	rm -f *.txt
 	rm -f *.jpg
 	rm -rf ./tmp
@@ -234,3 +234,17 @@ clean-vancouver:
 clean-pages: clean-bellingham clean-ferndale clean-friday-harbor \
 	clean-mount-vernon clean-seattle clean-spokane clean-vancouver
 	rm -rf pages
+
+################################################################################
+## The following targets index the pages and generate a database containing the
+## results.
+
+coaltrain.db:
+	sh call_db_function.sh create_db
+
+bellingham/pvc_room1_index-db: pages/bellingham/pvc_room1_index coaltrain.db
+	sh call_db_function.sh parse_bellingham_pvc_room1_index
+	sh call_db_function.sh insert_bellingham_pvc_room1_index
+
+clean-db:
+	rm -f coaltrain.db
