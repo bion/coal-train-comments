@@ -10,6 +10,7 @@ def create_db():
         create table authors (
             author varchar(128) primary key,
             city varchar(16),
+            section varchar(64),
             int page);''')
         
 
@@ -69,7 +70,7 @@ def parse_bellingham_pvc_room1_index():
         c = conn.cursor()
         for name, num in zip(names, nums):
             c.execute("insert into authors values ('" +
-                      name + "', 'BELLINGHAM', " + str(num) + ")")
+                      name + "', 'BELLINGHAM', 'PVC_ROOM1', " + str(num) + ")")
 
 def insert_bellingham_pvc_room1_index():
     pass
