@@ -1,8 +1,20 @@
 * coal-train-comments
 
-  This set of scripts centers around the invocation of the included Makefile.
-  The Makefile sets up a dependency graph which defines the pipeline that
-  generates all of the pages, database, and indexing. Read the Makefile to
-  understand the pipeline better -- it is fairly well-commented.
+** Description
 
-  To generate everything, just run `make`.
+   This set of scripts centers around the invocation of the included Makefile.
+   The Makefile sets up a dependency graph which defines the pipeline that
+   generates all of the pages, database, and indexing. Read the Makefile to
+   understand the pipeline better -- it is fairly well-commented.
+
+** Dependencies
+
+   You will need [[https://code.google.com/p/tesseract-ocr/][tesseract]] and [[https://duckduckgo.com/l/?kh=-1&uddg=http%3A%2F%2Fpoppler.freedesktop.org%2F][pdftoppm]].
+
+** Usage
+
+   To generate everything, just run ~make~. This may take a while, though so it
+   is advisable to run something like ~make -j `nproc`~, if you are able.
+
+   It is possible to generate pages related to individual sections -- see
+   the Makefile.
