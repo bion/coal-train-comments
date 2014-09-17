@@ -3,3 +3,4 @@ pdfs
 *.jpg
 coaltrain.db
 *.pyc
+.#*
