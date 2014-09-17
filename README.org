@@ -1,0 +1,8 @@
+* coal-train-comments
+
+  This set of scripts centers around the invocation of the included Makefile.
+  The Makefile sets up a dependency graph which defines the pipeline that
+  generates all of the pages, database, and indexing. Read the Makefile to
+  understand the pipeline better -- it is fairly well-commented.
+
+  To generate everything, just run `make`.
