@@ -4,6 +4,7 @@ clean: clean-pdf clean-pages clean-db
 	rm -f *.txt
 	rm -f *.jpg
 	rm -rf ./tmp
+	rm -f *.pyc
 
 ################################################################################
 ## The following set of targets is concerned with downloading each of the PDFs
@@ -243,7 +244,6 @@ coaltrain.db:
 	sh call_db_function.sh create_db
 
 bellingham/pvc_room1_index-db: pages/bellingham/pvc_room1_index coaltrain.db
-	sh call_db_function.sh parse_bellingham_pvc_room1_index
 	sh call_db_function.sh insert_bellingham_pvc_room1_index
 
 clean-db:

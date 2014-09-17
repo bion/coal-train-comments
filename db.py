@@ -41,7 +41,7 @@ def _pbpvcr1i_get_nums_from_lines(lines):
                map(fix_fives,
                    filter(lambda line: line != '\n', lines)))
 
-def parse_bellingham_pvc_room1_index():
+def insert_bellingham_pvc_room1_index():
     lines = get_lines_from_file('pages/bellingham/pvc_room1_index/cat.txt')
 
     names = []
@@ -71,6 +71,3 @@ def parse_bellingham_pvc_room1_index():
         for name, num in zip(names, nums):
             c.execute("insert into authors values ('" +
                       name + "', 'BELLINGHAM', 'PVC_ROOM1', " + str(num) + ")")
-
-def insert_bellingham_pvc_room1_index():
-    pass
