@@ -1,3 +1,5 @@
 pdfs
 *.txt
 *.jpg
+coaltrain.db
+*.pyc
