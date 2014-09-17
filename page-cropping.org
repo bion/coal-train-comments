@@ -55,3 +55,4 @@
   | Individual Verbal Comments (Tape Recorder) |     4 |  12 |          1 | 129 | 126 | 1038 | 1404 |
   | Public Verbal Comments (Room 1)            |    16 | 145 |          3 | 264 | 153 |  936 | 1338 |
   | Public Verbal Comments (Room 2)            |   150 | 260 |          3 | 261 | 162 |  930 | 1335 |
+  
