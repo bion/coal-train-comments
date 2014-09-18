@@ -5,6 +5,7 @@ clean: clean-pdf clean-pages clean-db
 	rm -f *.jpg
 	rm -rf ./tmp
 	rm -f *.pyc
+	rm -rf __pycache__
 
 ################################################################################
 ## The following set of targets is concerned with downloading each of the PDFs
@@ -31,22 +32,22 @@ pdfs:
 pdfs/bellingham.pdf: pdfs
 	${WGET} ${BELLINGHAM_PDF_URL} -O pdfs/bellingham.pdf
 
-pdfs/ferndale.pdf:
+pdfs/ferndale.pdf: pdfs
 	${WGET} ${FERNDALE_PDF_URL} -O pdfs/ferndale.pdf
 
-pdfs/friday_harbor.pdf:
+pdfs/friday_harbor.pdf: pdfs
 	${WGET} ${FRIDAY_HARBOR_PDF_URL} -O pdfs/friday_harbor.pdf
 
-pdfs/mount_vernon.pdf:
+pdfs/mount_vernon.pdf: pdfs
 	${WGET} ${MOUNT_VERNON_PDF_URL} -O pdfs/mount_vernon.pdf
 
-pdfs/seattle.pdf:
+pdfs/seattle.pdf: pdfs
 	${WGET} ${SEATTLE_PDF_URL} -O pdfs/seattle.pdf
 
-pdfs/spokane.pdf:
+pdfs/spokane.pdf: pdfs
 	${WGET} ${SPOKANE_PDF_URL} -O pdfs/spokane.pdf
 
-pdfs/vancouver.pdf:
+pdfs/vancouver.pdf: pdfs
 	${WGET} ${VANCOUVER_PDF_URL} -O pdfs/vancouver.pdf
 
 clean-pdf:
@@ -140,7 +141,7 @@ pages/mount_vernon/ivc_transcriptionist_index: pdfs/mount_vernon.pdf
 	${ocr_pdf} -f 10 -l 11 -x 264 -y 264 -W 888 -H 1296 -c mount_vernon \
 		-o ivc_transcriptionist_index
 
-pages/mount-venron/ivc_transcriptionist_comments: pdfs/mount_vernon.pdf
+pages/mount-vernon/ivc_transcriptionist_comments: pdfs/mount_vernon.pdf
 	mkdir -p pages/mount-venron/ivc_transcriptionist_comments
 	${ocr_pdf} -f 12 -l 55 -x 279 -y 270 -W 879 -H 1290 -c mount_vernon \
 		-o ivc_transcriptionist_comments
@@ -243,8 +244,89 @@ clean-pages: clean-bellingham clean-ferndale clean-friday-harbor \
 coaltrain.db:
 	sh call_db_function.sh create_db
 
-bellingham/pvc_room1_index-db: pages/bellingham/pvc_room1_index coaltrain.db
+bellingham/pvc_room1-db: pages/bellingham/pvc_room1_index coaltrain.db
 	sh call_db_function.sh insert_bellingham_pvc_room1_index
+
+bellingham/pvc_room2-db: pages/bellingham/pvc_room2_index coaltrain.db
+	sh call_db_function.sh insert_bellingham_pvc_room2_index
+
+bellingham/ivc_tape_recorder-db: pages/bellingham/ivc_tape_recorder coaltrain.db
+	sh call_db_function.sh insert_bellingham_ivc_tape_recorder
+
+ferndale/ivc_tape_recorder-db: pages/ferndale/ivc_tape_recorder coaltrain.db
+	sh call_db_function.sh insert_ferndale_ivc_tape_recorder
+
+ferndale/ivc_transcriptionist-db: pages/ferndale/ivc_transcriptionist \
+	coaltrain.db
+	sh call_db_function.sh insert_ferndale_ivc_transcriptionist
+
+ferndale/pvc_room1-db: pages/ferndale/pvc_room1 coaltrain.db
+	sh call_db_function.sh insert_ferndale_pvc_room1
+
+friday_harbor/ivc_transcriptionist-db: \
+	pages/friday_harbor/ivc_transcriptionist coaltrain.db
+	sh call_db_function.sh insert_friday_harbor_ivc_transcriptionist
+
+friday_harbor/pvc_room1-db: pages/friday_harbor/pvc_room1 coaltrain.db
+	sh call_db_function.sh insert_friday_harbor_pvc_room1
+
+mount_vernon/ivc_transcriptionist-db: \
+	pages/mount_vernon/ivc_transcriptionist_index \
+	coaltrain.db
+	sh call_db_function.sh insert_mount_vernon_ivc_transcriptionist_index
+
+mount_vernon/ivc_tape_recorder-db: pages/mount_vernon/ivc_tape_recorder \
+	coaltrain.db
+	sh call_db_function.sh insert_mount_vernon_ivc_tape_recorder
+
+mount_vernon/pvc_room1-db: pages/mount_vernon/pvc_room1_index coaltrain.db
+	sh call_db_function.sh insert_mount_vernon_pvc_room1_index
+
+seattle/ivc_tape_recorder-db: pages/seattle/ivc_tape_recorder coaltrain.db
+	sh call_db_function.sh insert_seattle_tape_recorder
+
+seattle/pvc_room1-db: pages/seattle/pvc_room1 coaltrain.db
+	sh call_db_function.sh insert_seattle_pvc_room1
+
+seattle/pvc_room2-db: pages/seattle/pvc_room2 coaltrain.db
+	sh call_db_function.sh insert_seattle_pvc_room2
+
+spokane/ivc_transcriptionist-db: \
+	pages/spokane/ivc_transcriptionist coaltrain.db
+	sh call_db_function.sh insert_spokane_ivc_transcriptionist
+
+spokane/pvc_room1-db: pages/spokane/pvc_room1 coaltrain.db
+	sh call_db_function.sh insert_spokane_pvc_room1
+
+vancouver/ivc_tape_recorder-db: pages/vancouver/ivc_tape_recorder coaltrain.db
+	sh call_db_function.sh insert_vancouver_ivc_tape_recorder
+
+vancouver/pvc_room1-db: pages/vancouver/pvc_room1 coaltrain.db
+	sh call_db_function.sh insert_vancouver_pvc_room1
+
+vancouver/pvc_room2-db: pages/vancouver/pvc_room2 coaltrain.db
+	sh call_db_function.sh insert_vancouver_pvc_room2
+
+populate-db: \
+	bellingham/pvc_room1-db \
+	bellingham/pvc_room2-db \
+	bellingham/ivc_tape_recorder-db \
+	ferndale/ivc_tape_recorder-db \
+	ferndale/ivc_transcriptionist-db \
+	ferndale/pvc_room1-db \
+	friday_harbor/ivc_transcriptionist-db \
+	friday_harbor/pvc_room1-db \
+	mount_vernon/ivc_transcriptionist-db \
+	mount_vernon/ivc_tape_recorder-db \
+	mount_vernon/pvc_room1-db \
+	seattle/ivc_tape_recorder-db \
+	seattle/pvc_room1-db \
+	seattle/pvc_room2-db \
+	spokane/ivc_transcriptionist-db \
+	spokane/pvc_room1-db \
+	vancouver/ivc_tape_recorder-db \
+	vancouver/pvc_room1-db \
+	vancouver/pvc_room2-db
 
 clean-db:
 	rm -f coaltrain.db
