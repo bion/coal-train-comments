@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python -c "from db import ${1}; ${1}()"
+python3 -c "from db import ${1}; ${1}()"
