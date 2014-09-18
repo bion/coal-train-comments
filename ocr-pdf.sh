@@ -67,7 +67,7 @@ do
     
     page_num_fmt=`printf "%03d" ${page}`
 
-    tesseract ${page_tmp_path}.jpg ${batch_tmp_path}-${page_num_fmt}
+    tesseract ${page_tmp_path}.jpg ${batch_tmp_path}-${page_num_fmt} &>/dev/null
 
     cat ${batch_tmp_path}-output.txt ${batch_tmp_path}-${page_num_fmt}.txt \
 	> ${batch_tmp_path}-tmp.txt
