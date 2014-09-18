@@ -15,6 +15,13 @@ def create_db():
             city varchar(16),
             section varchar(64),
             page integer);''')
+        c.execute('''
+        create table paths (
+            id integer primary key,
+            city varchar(16),
+            section varchar(64),
+            page integer,
+            path varchar(256))''')
 
 def get_lines_from_file(path):
     with open(path, 'r') as f:
@@ -116,12 +123,13 @@ def insert_bellingham_pvc_room2_index():
                    'BELLINGHAM',
                    'PUBLIC VERBAL COMMENTS (ROOM 2)')
 
-def insert_mount_vernon_ivc_trascriptionist_index():
+def insert_mount_vernon_ivc_transcriptionist_index():
     path = 'pages/mount_vernon/ivc_transcriptionist_index/cat.txt'
     lines = get_lines_from_file(path)
     names, nums = [], []
 
     names += _pbpvcr1i_get_names_from_lines(lines[3:29])
+    nums += [4, 4, 6, 8, 8, 9]
     nums += _pbpvcr1i_get_nums_from_lines(lines[32:63])
     assert(len(names) == len(nums))
 
@@ -263,7 +271,7 @@ def insert_spokane_pvc_room1():
 def insert_vancouver_ivc_tape_recorder():
     automatically_parse_pages(
         'Vancouver',
-        'Individual Verbal Comments (Recorder)'
+        'Individual Verbal Comments (Recorder)',
         'pages/vancouver/ivc_tape_recorder')
 
 def insert_vancouver_pvc_room1():
@@ -272,8 +280,63 @@ def insert_vancouver_pvc_room1():
         'Public Verbal Comments (Room 1)',
         'pages/vancouver/pvc_room1')
 
-def insert_vancouver_pvc_room1():
+def insert_vancouver_pvc_room2():
     automatically_parse_pages(
         'Vancouver',
         'Public Verbal Comments (Room 2)',
         'pages/vancouver/pvc_room2')
+
+################################################################################
+
+
+pvc_rm1_str = 'PUBLIC VERBAL COMMENTS (ROOM 1)'
+pvc_rm2_str = 'PUBLIC VERBAL COMMENTS (ROOM 2)'
+ivc_trans_str = 'INDIVIDUAL VERBAL COMMENTS (COURT REPORTER)'
+ivc_rec_str = 'INDIVIDUAL VERBAL COMMENTS (RECORDER)'
+
+def city_from_root(root):
+    if root[6:16] == 'bellingham': return 'BELLINGHAM'
+    elif root[6:14] == 'ferndale': return 'FERNDALE'
+    elif root[6:19] == 'friday_harbor': return 'FRIDAY HARBOR'
+    elif root[6:18] == 'mount_vernon': return 'MOUNT VERNON'
+    elif root[6:13] == 'seattle': return 'SEATTLE'
+    elif root[6:13] == 'spokane': return 'SPOKANE'
+    elif root[6:15] == 'vancouver': return 'VANCOUVER'
+    else: raise Exception('invalid root: %s' % root)
+
+def insert_paths():
+    ranges = [
+        ('pages/bellingham/ivc_tape_recorder', 5, 19, ivc_rec_str),
+        ('pages/bellingham/pvc_room1_comments', 27, 143, pvc_rm1_str),
+        ('pages/bellingham/pvc_room2_comments', 151, 300, pvc_rm2_str),
+        ('pages/ferndale/ivc_tape_recorder', 5, 18, ivc_rec_str),
+        ('pages/ferndale/ivc_transcriptionist', 21, 68, ivc_trans_str),
+        ('pages/ferndale/pvc_room1', 71, 219, pvc_rm1_str),
+        ('pages/friday_harbor/ivc_transcriptionist', 5, 52, ivc_trans_str),
+        ('pages/friday_harbor/pvc_room1', 56, 179, pvc_rm1_str),
+        ('pages/mount_vernon/ivc_tape_recorder', 4, 7, ivc_rec_str),
+        ('pages/mount_vernon/ivc_transcriptionist_comments', 12, 55,
+         ivc_trans_str),
+        ('pages/mount_vernon/pvc_room1_comments', 60, 173, pvc_rm1_str),
+        ('pages/seattle/ivc_tape_recorder', 4, 18, ivc_rec_str),
+        ('pages/seattle/pvc_room1', 21, 129, pvc_rm1_str),
+        ('pages/seattle/pvc_room2', 135, 245, pvc_rm2_str),
+        ('pages/spokane/ivc_transcriptionist', 6, 61, ivc_trans_str),
+        ('pages/spokane/pvc_room1', 96, 194, pvc_rm1_str),
+        ('pages/vancouver/ivc_tape_recorder', 4, 12, ivc_rec_str),
+        ('pages/vancouver/pvc_room1', 16, 145, pvc_rm1_str),
+        ('pages/vancouver/pvc_room2', 150, 260, pvc_rm2_str)
+    ]
+
+    cmd = "insert into paths values (NULL, '%s', '%s', %d, '%s');"
+
+    with sqlite3.connect('coaltrain.db') as conn:
+        c = conn.cursor()
+        for root, low, high, section in ranges:
+            for pp in range(low, high + 1):
+                c.execute(cmd % (city_from_root(root),
+                                 section,
+                                 pp,
+                                 os.path.join(root, '%03d.txt' % pp)))
+        
+     
